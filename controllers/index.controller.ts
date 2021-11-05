@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { successResponse } from '../helpers/methods'
-
+import  animalito_model from '../models/animalitos'
 
 /**
  *
@@ -10,9 +10,10 @@ import { successResponse } from '../helpers/methods'
  */
 export const index = async (req: Request, res: Response): Promise<void> => {
     res.send(successResponse(
-        'Express JS API Boiler Plate working like a charm...',
+        'Express JS API Boiler Plate post api working like a charm...',
         {
-            data: 'here comes you payload...'
+            data: 'here comes you payload...',
+            request: req.body,
         }
     ))
 }

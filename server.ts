@@ -1,7 +1,17 @@
 import app from './index'
 const port = process.env.PORT
+const mongoose = require('mongoose')
+const mongoose_options = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+}
 
-console.log(`Node environment: ${process.env.NODE_ENV}`);
-app.listen(port, () => {
-    console.log(`Example app listening at port http://localhost:${port}`)
-}) 
+mongoose.connect(process.env.MONGOSE_URL, mongoose_options).then( () => {
+    console.log('connected to mongo')
+    app.listen(port, () => {
+        console.log(`Example app listening at port http://localhost:${port}`)
+    })
+});
+
+
+

@@ -3,6 +3,7 @@ import supertest from 'supertest'
 
 describe("Test the root post path", () => {
     test("It should response the POST method", async () => {
+        jest.setTimeout(5000)
         await supertest(app).post("/")
             .send({
                 "key": "value"
