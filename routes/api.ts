@@ -11,6 +11,7 @@ const version = '/api/v1'
  */
 export const api = (app: Express) => {
     app.get(`${version}/animalito/find`, IndexController.find)
+    app.get(`${version}/animalito/findById`, IndexController.findByOne)
     app.post(`${version}/animalito/save`, IndexController.save)
     app.put(`${version}/animalito/update`, IndexController.update)
     app.delete(`${version}/animalito/remove`, IndexController.remove)

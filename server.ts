@@ -7,7 +7,6 @@ const mongoose_options = {
 }
 
 mongoose.connect(process.env.MONGOSE_URL, mongoose_options).then( () => {
-    console.log('connected to mongo')
     app.listen(port, () => {
         console.log(`Example app listening at port http://localhost:${port}`)
     })

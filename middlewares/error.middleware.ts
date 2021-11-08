@@ -9,7 +9,7 @@ import * as methods from '../helpers/methods'
  * @returns {*}
  */
 const errorMiddleware: ErrorRequestHandler = (error, req, res, next): Record<string, any> => {
-    return res.status(Number(process.env.EXCEPTION_CODE)).send(methods.failResponse(error.message))
+    return res.status(error.statusCode).send(methods.failResponse(error.message))
 }
 
 export default errorMiddleware

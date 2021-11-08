@@ -1,9 +1,9 @@
 import { Request, response, Response } from 'express'
+import { AnyArray } from 'mongoose'
 import { successResponse, failResponse } from '../helpers/methods'
 import animalito_model from '../models/animalitos'
 
 interface AnimalitoI {
-    _id: string;
     strNombre: string;
     strTipoAnimal: string;
     nmbEdad: number;
@@ -11,6 +11,10 @@ interface AnimalitoI {
     btnActivo: boolean;
     createdAt: string;
     updatedAt: string;
+}
+
+interface ID {
+    _id: string
 }
 
 /**
@@ -54,31 +58,35 @@ export const find = async (req: Request, res: Response): Promise<void> => {
  * @returns {Promise<void>}
  */
 export const findByOne = async (req: Request, res: Response): Promise<void> => {
-    await animalito_model.findById(req.body._id).then(
-        (respose) => {
-            if (response) {
 
-                res.send(
-                    successResponse(
-                        'Collection animalitos success', {
-                        data: 'find all documents',
-                        request: response
-                    }
-                    )
+    try {
+
+        const _id: ID = req.body._id
+
+        const response = await animalito_model.findById(_id).exec()
+
+        if (response) {
+            res.send(
+                successResponse(
+                    'Collection animalitos success', {
+                    data: 'find all documents',
+                    request: response
+                }
                 )
-
-            }
+            )
         }
-    ).catch((err) => {
+
+    } catch (error: any) {
         res.send(
             failResponse(
                 'Error to read collection', {
                 data: 'collection error',
-                request: err
+                request: error
             }
             )
         )
-    })
+    }
+
 }
 
 /**
@@ -90,27 +98,33 @@ export const findByOne = async (req: Request, res: Response): Promise<void> => {
 export const save = async (req: Request, res: Response): Promise<void> => {
     const body: AnimalitoI = req.body;
     if (body) {
-        let response =  await animalito_model.create(body).catch((err) => {
+
+        try {
+
+            let response = await animalito_model.create(body)
+
             res.send(
-                failResponse(
-                    'Error to create document', {
-                    data: 'error in catch',
-                    request: err
+                successResponse(
+                    `Animalido save`, {
+                    data: 'create document',
+                    request: response
                 }
                 )
             )
-        });
 
-        if(response){
+
+        } catch (error) {
             res.send(
-                successResponse(
-                    `Animalido was saved`, {
-                    data: 'save document',
-                    request: body
+                failResponse(
+                    `Animalido create`, {
+                    data: 'document was not created',
+                    request: error
                 }
                 )
             )
         }
+
+
     }
 }
 
@@ -121,29 +135,40 @@ export const save = async (req: Request, res: Response): Promise<void> => {
  * @returns {Promise<void>}
  */
 export const update = async (req: Request, res: Response): Promise<void> => {
-    animalito_model.findByIdAndUpdate(req.body._id, req.body.update, { new: false }).then(
-        (document: AnimalitoI) => {
-            if (document) {
-                res.send(
-                    successResponse(
-                        `Animalido ${req.body.id}`, {
-                        data: 'update document',
-                        request: document
-                    }
-                    )
-                )
+
+
+    try {
+
+        const _id: ID = req.body._id
+        const toUpdate: AnimalitoI = req.body.toUpdate
+
+        const response = await animalito_model.findByIdAndUpdate(_id, toUpdate, { new: false })
+
+        res.send(
+            successResponse(
+                `Animalido ${response._id}`, {
+                data: 'update document',
+                request: true
             }
-        }
-    ).catch((err) => {
+            )
+        )
+
+
+    } catch (error: any) {
         res.send(
             failResponse(
                 `Animalido ${req.body.id}`, {
                 data: 'document was not updated',
-                request: err
+                request: error
             }
             )
         )
-    });
+    }
+
+
+
+
+
 }
 
 /**
@@ -153,27 +178,40 @@ export const update = async (req: Request, res: Response): Promise<void> => {
  * @returns {Promise<void>}
  */
 export const remove = async (req: Request, res: Response): Promise<void> => {
-    animalito_model.remove(req.body._id).then(
-        (response) => {
-            if (response) {
-                res.send(
-                    successResponse(
-                        `Animalido ${req.body.id}`, {
-                        data: 'document was removed',
-                        request: document
-                    }
-                    )
+
+    try {
+
+        const _id: ID = req.body._id
+        const toRemove: AnimalitoI = req.body.toRemove
+
+        const response = await animalito_model.remove({ _id, toRemove }).exec()
+
+        console.log(response)
+
+        if (response) {
+
+            res.send(
+                successResponse(
+                    `Animalido ${_id}`, {
+                    data: 'document was removed',
+                    request: response
+                }
                 )
-            }
+            )
+
         }
-    ).catch((err) => {
+
+
+    } catch (error: any) {
+        console.log(error)
         res.send(
             failResponse(
-                `Animalido ${req.body.id}`, {
+                'catch', {
                 data: 'document was not removed',
-                request: err
+                request: JSON.stringify(error)
             }
             )
         )
-    })
+    }
+
 }

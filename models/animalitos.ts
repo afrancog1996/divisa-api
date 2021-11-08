@@ -3,10 +3,9 @@ import mongoose from 'mongoose'
 const { Schema } = mongoose;
 
 const animalitosSchema = new Schema({
-    _id: { type: Schema.Types.ObjectId },
     strNombre: { type: Schema.Types.String },
     strTipoAnimal: { type: Schema.Types.String },
-    nmbEdad: { type: Schema.Types.Decimal128 },
+    nmbEdad: { type: Schema.Types.Number },
     strSexo: { type: Schema.Types.String },
     btnActivo: { type: Schema.Types.Boolean },
     createdAt: { type: Schema.Types.String },
